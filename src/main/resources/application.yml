@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http:/localhost:9000
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+      client:
+        registration:
+          gateway:
+            provider: oauth
+            client-id: toyota-client
+            client-secret: toyota
+            authorization-grant-type: client_credentials
+        provider:
+          oauth:
+            token-uri: https://localhost:9000
+            jwk-set-uri: http://localhost:9000/oauth2/jwks
+  cloud:
+    gateway:
+      routes:
+        - id: car
+          uri: http://localhost:9010/
+          predicates:
+            - Path=/api/**
+        - id: oauth
+          uri: http://localhost:9000/
+          predicates:
+            - Path=/oauth/**
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.web.HttpLogging: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.cloud.gateway: DEBUG
