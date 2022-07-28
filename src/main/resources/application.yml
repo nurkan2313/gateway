@@ -8,17 +8,17 @@ spring:
         jwt:
           issuer-uri: http:/localhost:9000
           jwk-set-uri: http://localhost:9000/oauth2/jwks
-      client:
-        registration:
-          gateway:
-            provider: oauth
-            client-id: toyota-client
-            client-secret: toyota
-            authorization-grant-type: client_credentials
-        provider:
-          oauth:
-            token-uri: https://localhost:9000
-            jwk-set-uri: http://localhost:9000/oauth2/jwks
+#      client:
+#        registration:
+#          gateway:
+#            provider: oauth
+#            client-id: qrdata
+#            client-secret: scrts
+#            authorization-grant-type: client_credentials
+#        provider:
+#          oauth:
+#            token-uri: https://localhost:9000
+#            jwk-set-uri: http://localhost:9000/oauth2/jwks
   cloud:
     gateway:
       routes:
@@ -30,15 +30,19 @@ spring:
           uri: http://localhost:9000/
           predicates:
             - Path=/oauth/**
+        - id: qr-data
+          uri: http://localhost:2023/
+          predicates:
+            - Path=/acquire/**
   main:
     web-application-type: reactive
     allow-bean-definition-overriding: true
 
 logging:
   level:
-    root: INFO
-    org.springframework.web: INFO
-    org.springframework.web.HttpLogging: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.security.oauth2: DEBUG
-    org.springframework.cloud.gateway: DEBUG
+    root: info
+    org.springframework.web: info
+    org.springframework.web.HttpLogging: info
+    org.springframework.security: info
+    org.springframework.security.oauth2: trace
+    org.springframework.cloud.gateway: info
